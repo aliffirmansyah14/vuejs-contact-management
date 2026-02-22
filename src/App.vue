@@ -1,9 +1,5 @@
-<script setup>
-import HelloWorld from "./components/HelloWorld.vue";
-</script>
+<script setup></script>
 
 <template>
-	<div class="min-h-dvh bg-black">
-		<HelloWorld />
-	</div>
+	<RouterView />
 </template>
