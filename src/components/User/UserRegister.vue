@@ -1,6 +1,7 @@
 <script setup>
 import { reactive } from "vue";
 import Input from "../Input.vue";
+import Label from "../Label.vue";
 
 const formState = reactive({
 	username: "",
@@ -27,12 +28,7 @@ function submit() {
 
 		<form>
 			<div class="mb-4">
-				<label
-					for="username"
-					class="block text-gray-300 text-sm font-medium mb-2"
-					>Username</label
-				>
-
+				<Label label-name="username" for="username" />
 				<div class="relative">
 					<div
 						class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
@@ -50,9 +46,7 @@ function submit() {
 			</div>
 
 			<div class="mb-4">
-				<label for="name" class="block text-gray-300 text-sm font-medium mb-2"
-					>Full Name</label
-				>
+				<Label label-name="Fullname" for="fullname" />
 				<div class="relative">
 					<div
 						class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
@@ -71,11 +65,7 @@ function submit() {
 			</div>
 
 			<div class="mb-4">
-				<label
-					for="password"
-					class="block text-gray-300 text-sm font-medium mb-2"
-					>Password</label
-				>
+				<Label label-name="password" for="password" />
 				<div class="relative">
 					<div
 						class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
@@ -94,11 +84,7 @@ function submit() {
 			</div>
 
 			<div class="mb-6">
-				<label
-					for="confirm_password"
-					class="block text-gray-300 text-sm font-medium mb-2"
-					>Confirm Password</label
-				>
+				<Label label-name="Confirm password" for="confirm_password" />
 				<div class="relative">
 					<div
 						class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
