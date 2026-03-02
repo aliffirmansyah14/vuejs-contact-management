@@ -2,36 +2,14 @@
 import { reactive } from "vue";
 import Input from "../Input.vue";
 import Label from "../Label.vue";
-import { userRegister } from "../../lib/UserApi";
-import { alertError, alertSuccess } from "../../lib/alert";
-import { RouterLink, useRouter } from "vue-router";
 
-const router = useRouter();
-
-const user = reactive({
+const formState = reactive({
 	username: "",
-	name: "",
 	password: "",
-	confirmPassword: "",
 });
 
-async function handleSubmit() {
-	if (user.password !== user.confirmPassword) {
-		await alertError("Password tidak sama");
-		return;
-	}
-
-	const response = await userRegister(user);
-	const result = await response.json();
-
-	if (response.status === 200) {
-		await alertSuccess("Berhasil membuat user");
-		await router.push({
-			path: "/login",
-		});
-	} else {
-		await alertError(result.errors);
-	}
+function submit() {
+	console.log(formState);
 }
 </script>
 <template>
@@ -43,10 +21,10 @@ async function handleSubmit() {
 				<i class="fas fa-user-plus text-3xl text-white"></i>
 			</div>
 			<h1 class="text-3xl font-bold text-white">Contact Management</h1>
-			<p class="text-gray-300 mt-2">Create a new account</p>
+			<p class="text-gray-300 mt-2">Login to Contact Management</p>
 		</div>
 
-		<form v-on:submit.prevent="handleSubmit">
+		<form>
 			<div class="mb-4">
 				<Label label-name="username" for="username" />
 				<div class="relative">
@@ -56,30 +34,11 @@ async function handleSubmit() {
 						<i class="fas fa-user text-gray-500"></i>
 					</div>
 					<Input
-						v-model="user.username"
+						v-model="formState.username"
 						type="text"
 						id="username"
 						name="username"
 						placeholder="choose ur username"
-					/>
-				</div>
-			</div>
-
-			<div class="mb-4">
-				<Label label-name="Fullname" for="fullname" />
-				<div class="relative">
-					<div
-						class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-					>
-						<i class="fas fa-id-card text-gray-500"></i>
-					</div>
-					<Input
-						v-model="user.name"
-						type="text"
-						id="name"
-						name="name"
-						placeholder="Enter your full name"
-						required
 					/>
 				</div>
 			</div>
@@ -93,30 +52,11 @@ async function handleSubmit() {
 						<i class="fas fa-lock text-gray-500"></i>
 					</div>
 					<Input
-						v-model="user.password"
+						v-model="formState.password"
 						id="password"
 						name="password"
 						type="password"
-						placeholder="Create a password"
-						required
-					/>
-				</div>
-			</div>
-
-			<div class="mb-6">
-				<Label label-name="Confirm password" for="confirm_password" />
-				<div class="relative">
-					<div
-						class="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none"
-					>
-						<i class="fas fa-check-double text-gray-500"></i>
-					</div>
-					<Input
-						v-model="user.confirmPassword"
-						id="confirmPassword"
-						name="confirmPassword"
-						type="password"
-						placeholder="Confirm a password"
+						placeholder="Type ur password"
 						required
 					/>
 				</div>
@@ -124,6 +64,7 @@ async function handleSubmit() {
 
 			<div class="mb-6">
 				<button
+					@click.prevent="submit"
 					type="submit"
 					class="w-full bg-gradient text-white py-3 px-4 rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-lg transform hover:-translate-y-0.5"
 				>
@@ -132,12 +73,12 @@ async function handleSubmit() {
 			</div>
 
 			<div class="text-center text-sm text-gray-400">
-				Already have an account?
-				<RouterLink
-					href="/login"
+				DontAlready have an account?
+				<a
+					href="index.html"
 					class="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200"
-					>Sign in
-				</RouterLink>
+					>Sign ups</a
+				>
 			</div>
 		</form>
 	</div>
