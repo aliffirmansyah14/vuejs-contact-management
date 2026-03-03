@@ -26,3 +26,40 @@ export const userLogin = async ({ username, password }) => {
 		}),
 	});
 };
+
+export const userDetail = async token => {
+	return await fetch(`${import.meta.env.VITE_API_PATH}/users/current`, {
+		headers: {
+			"Content-Type": "application/json",
+			Accept: "application/json",
+			Authorization: token,
+		},
+		method: "GET",
+	});
+};
+
+export const userUpdateProfile = async ({ name }) => {
+	return await fetch(`${import.meta.env.VITE_API_PATH}/users/current`, {
+		headers: {
+			"Content-Type": "application/json",
+			Accept: "application/json",
+		},
+		method: "PATH",
+		body: JSON.stringify({
+			name,
+		}),
+	});
+};
+
+export const userUpdatePassword = async ({ password }) => {
+	return await fetch(`${import.meta.env.VITE_API_PATH}/users/current`, {
+		headers: {
+			"Content-Type": "application/json",
+			Accept: "application/json",
+		},
+		method: "PATH",
+		body: JSON.stringify({
+			password,
+		}),
+	});
+};

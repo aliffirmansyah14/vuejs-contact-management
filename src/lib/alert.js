@@ -8,10 +8,11 @@ export const alertSuccess = async message => {
 	});
 };
 
-export const alertError = async message => {
+export const alertError = async (message, onClose = () => {}) => {
 	return Swal.fire({
 		icon: "error",
 		title: "Ups",
 		text: message,
+		didClose: onClose,
 	});
 };
