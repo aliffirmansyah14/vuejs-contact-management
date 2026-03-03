@@ -134,7 +134,7 @@ async function handleSubmit() {
 			<div class="text-center text-sm text-gray-400">
 				Already have an account?
 				<RouterLink
-					href="/login"
+					to="/login"
 					class="text-blue-400 hover:text-blue-300 font-medium transition-colors duration-200"
 					>Sign in
 				</RouterLink>
