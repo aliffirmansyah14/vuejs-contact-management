@@ -11,7 +11,7 @@ export const alertSuccess = async message => {
 export const alertError = async message => {
 	return Swal.fire({
 		icon: "error",
-		title: "Error",
+		title: "Ups",
 		text: message,
 	});
 };

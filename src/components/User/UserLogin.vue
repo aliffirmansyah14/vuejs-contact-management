@@ -2,15 +2,32 @@
 import { reactive } from "vue";
 import Input from "../Input.vue";
 import Label from "../Label.vue";
-import { RouterLink } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
+import { userLogin } from "../../lib/UserApi";
+import { alertError } from "../../lib/alert";
+import { useLocalStorage } from "@vueuse/core";
+
+const router = useRouter();
+const token = useLocalStorage("token", "");
 
 const user = reactive({
 	username: "",
 	password: "",
 });
 
-function handleSubmit() {
-	console.log(user);
+async function handleSubmit() {
+	const response = await userLogin(user);
+	const result = await response.json();
+
+	console.log(result);
+
+	if (response.status === 200) {
+		await router.push({
+			path: "/dashboard/contacts",
+		});
+	} else {
+		await alertError(result.errors);
+	}
 }
 </script>
 <template>
