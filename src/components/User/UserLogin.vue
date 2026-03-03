@@ -1,11 +1,11 @@
 <script setup>
 import { reactive } from "vue";
-import Input from "../Input.vue";
-import Label from "../Label.vue";
 import { RouterLink, useRouter } from "vue-router";
 import { userLogin } from "../../lib/UserApi";
 import { alertError } from "../../lib/alert";
 import { useLocalStorage } from "@vueuse/core";
+import Input from "../ui/Input.vue";
+import Label from "../ui/Label.vue";
 
 const router = useRouter();
 const token = useLocalStorage("token", "");
@@ -19,9 +19,8 @@ async function handleSubmit() {
 	const response = await userLogin(user);
 	const result = await response.json();
 
-	console.log(result);
-
 	if (response.status === 200) {
+		token.value = result.data.token;
 		await router.push({
 			path: "/dashboard/contacts",
 		});
