@@ -65,3 +65,12 @@ export const userUpdatePassword = async ({ password }, token) => {
 		}),
 	});
 };
+
+export const userLogout = async token => {
+	return await fetch(`${import.meta.env.VITE_API_PATH}/users/current`, {
+		headers: {
+			Authorization: token,
+		},
+		method: "DELETE",
+	});
+};

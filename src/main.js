@@ -8,6 +8,7 @@ import UserLogin from "./components/User/UserLogin.vue";
 import DashboardLayout from "./components/DashboardLayout.vue";
 import ContactList from "./components/Contact/ContactList.vue";
 import UserProfile from "./components/User/UserProfile.vue";
+import UserLogout from "./components/User/UserLogout.vue";
 
 const routes = [
 	{
@@ -34,6 +35,10 @@ const routes = [
 			{
 				path: "users/profile",
 				component: UserProfile,
+			},
+			{
+				path: "users/logout",
+				component: UserLogout,
 			},
 		],
 	},
