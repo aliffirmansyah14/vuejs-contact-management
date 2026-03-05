@@ -61,7 +61,7 @@ async function handleUpdateProfile() {
 
 	isSubmitting.value = true;
 	try {
-		await new Promise(resolve => setTimeout(resolve, 300));
+		// await new Promise(resolve => setTimeout(resolve, 300));
 		const response = await userUpdateProfile({ name: state.name }, token.value);
 		const result = await response.json();
 
@@ -89,7 +89,7 @@ async function handleUpdatePassword() {
 	}
 	isSubmitting.value = true;
 	try {
-		await new Promise(resolve => setTimeout(resolve, 300));
+		// await new Promise(resolve => setTimeout(resolve, 300));
 		const response = await userUpdatePassword(
 			{ password: formPassword.password },
 			token.value,
