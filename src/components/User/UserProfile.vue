@@ -1,48 +1,123 @@
 <script setup>
 import { useLocalStorage } from "@vueuse/core";
-import { onMounted, ref } from "vue";
-import { userDetail } from "../../lib/UserApi";
-import { alertError } from "../../lib/alert";
+import { onMounted, reactive, ref } from "vue";
+import {
+	userDetail,
+	userUpdatePassword,
+	userUpdateProfile,
+} from "../../lib/UserApi";
+import { alertError, alertSuccess } from "../../lib/alert";
 import Spinner from "../ui/Spinner.vue";
 import Label from "../ui/Label.vue";
 import Input from "../ui/Input.vue";
 import { useRouter } from "vue-router";
+import Card from "../ui/Card.vue";
 
 const router = useRouter();
 
 const token = useLocalStorage("token");
-const name = ref("");
-const loading = ref(true);
+const state = reactive({
+	name: "",
+	isLoading: true,
+	errors: undefined,
+});
+
+const formPassword = reactive({
+	password: "",
+	confirmPassword: "",
+});
+
+const isSubmitting = ref(false);
 
 async function fetchUser() {
-	loading.value = true;
+	state.isLoading = true;
 	try {
-		await new Promise(resolve => setTimeout(resolve, 10000));
+		// await new Promise(resolve => setTimeout(resolve, 1000));
 		const response = await userDetail(token.value);
 		const result = await response.json();
 		if (response.status === 200) {
-			name.value = result.data.name;
+			state.name = result.data.name;
 		} else {
-			await alertError(
-				result.errors,
-				async () =>
-					await router.push({
-						path: "/login",
-					}),
-			);
+			await alertError(result.errors, async () => {
+				state.errors = result.errors;
+				await router.push({
+					path: "/login",
+				});
+			});
 		}
 	} catch (error) {
 		await alertError("Terjadi kesalahan");
 	} finally {
-		loading.value = false;
+		state.isLoading = false;
 	}
 }
 onMounted(async () => await fetchUser());
+
+async function handleUpdateProfile() {
+	if (!state.name.trim()) {
+		await alertError("Name tidak boleh kosong");
+		return;
+	}
+
+	isSubmitting.value = true;
+	try {
+		await new Promise(resolve => setTimeout(resolve, 300));
+		const response = await userUpdateProfile({ name: state.name }, token.value);
+		const result = await response.json();
+
+		console.log(result);
+		if (response.status === 200) {
+			await alertSuccess("Update name berhasil");
+		} else {
+			await alertError(result.errors);
+		}
+	} catch (error) {
+		await alertError("Terjadi Kesalahan");
+	} finally {
+		isSubmitting.value = false;
+	}
+}
+
+async function handleUpdatePassword() {
+	if (!formPassword.password.trim() || !formPassword.confirmPassword.trim()) {
+		await alertError("Password atau Confirm Password tidak boleh kosong");
+		return;
+	}
+	if (formPassword.password.trim() !== formPassword.confirmPassword.trim()) {
+		await alertError("Password atau Confirm Password tidak sama");
+		return;
+	}
+	isSubmitting.value = true;
+	try {
+		await new Promise(resolve => setTimeout(resolve, 300));
+		const response = await userUpdatePassword(
+			{ password: formPassword.password },
+			token.value,
+		);
+		const result = await response.json();
+
+		console.log(result);
+		if (response.status === 200) {
+			await alertSuccess("Update password berhasil");
+		} else {
+			await alertError(result.errors);
+		}
+	} catch (error) {
+		await alertError("Terjadi Kesalahan");
+	} finally {
+		isSubmitting.value = false;
+		resetFormPassword();
+	}
+}
+function resetFormPassword() {
+	formPassword.confirmPassword = "";
+	formPassword.password = "";
+}
 </script>
 
 <template>
-	<Spinner v-if="loading" class-name="grow" />
-	<template v-else-if="!loading && name">
+	<Spinner v-if="state.isLoading" style-container="grow" />
+	<template v-else-if="!state.isLoading && !state.errors">
 		<div class="flex items-center mb-6">
 			<i class="fas fa-user-cog text-blue-400 text-2xl mr-3"></i>
 			<h1 class="text-2xl font-bold text-white">My Profile</h1>
@@ -50,9 +125,7 @@ onMounted(async () => await fetchUser());
 
 		<div class="grid grid-cols-1 md:grid-cols-2 gap-8">
 			<!-- Form 1: Edit Name -->
-			<div
-				class="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden card-hover animate-fade-in"
-			>
+			<Card>
 				<div class="p-6">
 					<div class="flex items-center mb-4">
 						<div
@@ -62,7 +135,7 @@ onMounted(async () => await fetchUser());
 						</div>
 						<h2 class="text-xl font-semibold text-white">Edit Profile</h2>
 					</div>
-					<form>
+					<form v-on:submit.prevent="handleUpdateProfile">
 						<div class="mb-5">
 							<Label for="name">Full Name</Label>
 							<div class="relative">
@@ -72,7 +145,7 @@ onMounted(async () => await fetchUser());
 									<i class="fas fa-user text-gray-500"></i>
 								</div>
 								<Input
-									v-model="name"
+									v-model="state.name"
 									type="text"
 									id="name"
 									name="name"
@@ -85,19 +158,18 @@ onMounted(async () => await fetchUser());
 						<div class="mt-6">
 							<button
 								type="submit"
-								class="w-full bg-gradient text-white py-3 px-4 rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-lg transform hover:-translate-y-0.5 flex items-center justify-center"
+								:disabled="isSubmitting"
+								class="w-full bg-gradient text-white py-3 px-4 rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-lg transform hover:-translate-y-0.5 flex items-center justify-center disabled:[background:var(--color-gray-500)]"
 							>
 								<i class="fas fa-save mr-2"></i> Update Profile
 							</button>
 						</div>
 					</form>
 				</div>
-			</div>
+			</Card>
 
 			<!-- Form 2: Edit Password -->
-			<div
-				class="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden card-hover animate-fade-in"
-			>
+			<Card>
 				<div class="p-6">
 					<div class="flex items-center mb-4">
 						<div
@@ -107,7 +179,7 @@ onMounted(async () => await fetchUser());
 						</div>
 						<h2 class="text-xl font-semibold text-white">Change Password</h2>
 					</div>
-					<form>
+					<form v-on:submit.prevent="handleUpdatePassword">
 						<div class="mb-5">
 							<Label for="new_password">New Password</Label>
 							<div class="relative">
@@ -117,6 +189,7 @@ onMounted(async () => await fetchUser());
 									<i class="fas fa-lock text-gray-500"></i>
 								</div>
 								<Input
+									v-model="formPassword.password"
 									type="password"
 									id="new_password"
 									name="new_password"
@@ -139,6 +212,7 @@ onMounted(async () => await fetchUser());
 									<i class="fas fa-check-double text-gray-500"></i>
 								</div>
 								<Input
+									v-model="formPassword.confirmPassword"
 									type="password"
 									id="confirm_password"
 									placeholder="Confirm your new password"
@@ -150,14 +224,15 @@ onMounted(async () => await fetchUser());
 						<div class="mt-6">
 							<button
 								type="submit"
-								class="w-full bg-gradient text-white py-3 px-4 rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-lg transform hover:-translate-y-0.5 flex items-center justify-center"
+								class="w-full bg-gradient text-white py-3 px-4 rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-lg transform hover:-translate-y-0.5 flex items-center justify-center disabled:[background:var(--color-gray-500)]"
+								:disabled="isSubmitting"
 							>
 								<i class="fas fa-key mr-2"></i> Update Password
 							</button>
 						</div>
 					</form>
 				</div>
-			</div>
+			</Card>
 		</div>
 	</template>
 </template>

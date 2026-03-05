@@ -38,26 +38,28 @@ export const userDetail = async token => {
 	});
 };
 
-export const userUpdateProfile = async ({ name }) => {
+export const userUpdateProfile = async ({ name }, token) => {
 	return await fetch(`${import.meta.env.VITE_API_PATH}/users/current`, {
 		headers: {
 			"Content-Type": "application/json",
 			Accept: "application/json",
+			Authorization: token,
 		},
-		method: "PATH",
+		method: "PATCH",
 		body: JSON.stringify({
 			name,
 		}),
 	});
 };
 
-export const userUpdatePassword = async ({ password }) => {
+export const userUpdatePassword = async ({ password }, token) => {
 	return await fetch(`${import.meta.env.VITE_API_PATH}/users/current`, {
 		headers: {
 			"Content-Type": "application/json",
 			Accept: "application/json",
+			Authorization: token,
 		},
-		method: "PATH",
+		method: "PATCH",
 		body: JSON.stringify({
 			password,
 		}),

@@ -1,17 +1,35 @@
 <script setup>
 import { cn } from "../../lib/utils";
 
-const { className } = defineProps({ className: String });
+const { styleContainer, backGround, fillColour, size } = defineProps({
+	styleContainer: String,
+	size: String,
+	backGround: String,
+	fillColour: String,
+});
+
+const sizeStyle = {
+	sm: "size-4",
+	md: "size-8",
+	lg: "size-10",
+};
 </script>
 
 <template>
 	<div
 		role="status"
-		:class="cn('w-full flex items-center justify-center', className)"
+		:class="cn('w-full flex items-center justify-center', styleContainer)"
 	>
 		<svg
 			aria-hidden="true"
-			class="w-8 h-8 text-neutral-500 animate-spin fill-blue-500"
+			:class="
+				cn(
+					'text-neutral-500 animate-spin fill-blue-500',
+					size ? sizeStyle[size] : sizeStyle.md,
+					backGround,
+					fillColour,
+				)
+			"
 			viewBox="0 0 100 101"
 			fill="none"
 			xmlns="http://www.w3.org/2000/svg"
