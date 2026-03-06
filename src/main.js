@@ -9,6 +9,7 @@ import DashboardLayout from "./components/DashboardLayout.vue";
 import ContactList from "./components/Contact/ContactList.vue";
 import UserProfile from "./components/User/UserProfile.vue";
 import UserLogout from "./components/User/UserLogout.vue";
+import ContactCreate from "./components/Contact/ContactCreate.vue";
 
 const routes = [
 	{
@@ -31,6 +32,10 @@ const routes = [
 			{
 				path: "contacts",
 				component: ContactList,
+			},
+			{
+				path: "contacts/create",
+				component: ContactCreate,
 			},
 			{
 				path: "users/profile",
