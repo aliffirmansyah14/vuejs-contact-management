@@ -1,6 +1,6 @@
 <script setup>
 import { useLocalStorage } from "@vueuse/core";
-import { userLogout } from "../../lib/UserApi";
+import { userLogout } from "../../lib/component/UserApi";
 import { alertError } from "../../lib/alert";
 import { useRouter } from "vue-router";
 import { onBeforeMount } from "vue";

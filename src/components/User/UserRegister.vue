@@ -1,6 +1,6 @@
 <script setup>
 import { reactive } from "vue";
-import { userRegister } from "../../lib/UserApi";
+import { userRegister } from "../../lib/api/UserApi";
 import { alertError, alertSuccess } from "../../lib/alert";
 import { RouterLink, useRouter } from "vue-router";
 import Input from "../ui/Input.vue";

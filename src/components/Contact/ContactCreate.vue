@@ -3,13 +3,25 @@ import { RouterLink } from "vue-router";
 import Card from "../ui/Card.vue";
 import Input from "../ui/Input.vue";
 import Label from "../ui/Label.vue";
+import { reactive } from "vue";
+
+const contact = reactive({
+	first_name: "",
+	last_name: "",
+	email: "",
+	phone: "",
+});
+
+function handleSubmit() {
+	console.log(contact);
+}
 </script>
 
 <template>
-	<div class="flex items-center mb-6">
+	<div class="flex items-center md:justify-center mb-6 relative">
 		<RouterLink
 			to="/dashboard/contacts"
-			class="text-blue-400 hover:text-blue-300 mr-4 flex items-center transition-colors duration-200"
+			class="md:absolute left-0 text-blue-400 hover:text-blue-300 mr-4 flex items-center transition-colors duration-200"
 		>
 			<i class="fas fa-arrow-left mr-2"></i> Back to Contacts
 		</RouterLink>
@@ -22,7 +34,7 @@ import Label from "../ui/Label.vue";
 		class="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden max-w-2xl mx-auto animate-fade-in"
 	>
 		<div class="p-8">
-			<form>
+			<form v-on:submit.prevent="handleSubmit">
 				<div class="grid grid-cols-1 md:grid-cols-2 gap-5 mb-5">
 					<div>
 						<Label for="first_name" label-name="Firstname" />
@@ -33,6 +45,7 @@ import Label from "../ui/Label.vue";
 								<i class="fas fa-user-tag text-gray-500"></i>
 							</div>
 							<Input
+								v-model="contact.first_name"
 								type="text"
 								id="first_name"
 								name="first_name"
@@ -51,6 +64,7 @@ import Label from "../ui/Label.vue";
 								<i class="fas fa-user-tag text-gray-500"></i>
 							</div>
 							<Input
+								v-model="contact.last_name"
 								type="text"
 								id="last_name"
 								name="last_name"
@@ -71,6 +85,7 @@ import Label from "../ui/Label.vue";
 							<i class="fas fa-envelope text-gray-500"></i>
 						</div>
 						<Input
+							v-model="contact.email"
 							type="email"
 							id="email"
 							name="email"
@@ -90,6 +105,7 @@ import Label from "../ui/Label.vue";
 							<i class="fas fa-phone text-gray-500"></i>
 						</div>
 						<Input
+							v-model="contact.phone"
 							type="tel"
 							id="phone"
 							name="phone"

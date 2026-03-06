@@ -1,7 +1,7 @@
 <script setup>
 import { reactive } from "vue";
 import { RouterLink, useRouter } from "vue-router";
-import { userLogin } from "../../lib/UserApi";
+import { userLogin } from "../../lib/api/UserApi";
 import { alertError } from "../../lib/alert";
 import { useLocalStorage } from "@vueuse/core";
 import Input from "../ui/Input.vue";

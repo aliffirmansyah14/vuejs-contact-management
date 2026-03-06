@@ -5,7 +5,7 @@ import {
 	userDetail,
 	userUpdatePassword,
 	userUpdateProfile,
-} from "../../lib/UserApi";
+} from "../../lib/api/UserApi";
 import { alertError, alertSuccess } from "../../lib/alert";
 import Spinner from "../ui/Spinner.vue";
 import Label from "../ui/Label.vue";
