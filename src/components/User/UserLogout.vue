@@ -9,7 +9,7 @@ const router = useRouter();
 const token = useLocalStorage("token");
 
 async function fetchUserLogout() {
-	const response = await userLogout(token);
+	const response = await userLogout(token.value);
 	const result = await response.json();
 
 	console.log(result);
