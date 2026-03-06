@@ -1,9 +1,15 @@
 <script setup>
-import { RouterLink } from "vue-router";
+import { RouterLink, useRouter } from "vue-router";
 import Card from "../ui/Card.vue";
 import Input from "../ui/Input.vue";
 import Label from "../ui/Label.vue";
 import { reactive } from "vue";
+import { contactCreate } from "../../lib/api/ContactApi";
+import { alertError, alertSuccess } from "../../lib/alert";
+import { useLocalStorage } from "@vueuse/core";
+
+const router = useRouter();
+const token = useLocalStorage("token");
 
 const contact = reactive({
 	first_name: "",
@@ -12,8 +18,19 @@ const contact = reactive({
 	phone: "",
 });
 
-function handleSubmit() {
-	console.log(contact);
+async function handleSubmit() {
+	const response = await contactCreate(contact, token.value);
+	const result = await response.json();
+
+	// console.log(result);
+	if (response.status === 200) {
+		await alertSuccess("Successfully created contact");
+		await router.push({
+			path: "/dashboard/contacts",
+		});
+	} else {
+		await alertError(result.errors);
+	}
 }
 </script>
 
