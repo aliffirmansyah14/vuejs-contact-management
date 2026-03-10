@@ -22,7 +22,7 @@ async function handleSubmit() {
 	const response = await contactCreate(contact, token.value);
 	const result = await response.json();
 
-	// console.log(result);
+	console.log(result);
 	if (response.status === 200) {
 		await alertSuccess("Successfully created contact");
 		await router.push({
