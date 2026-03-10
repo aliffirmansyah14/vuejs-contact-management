@@ -43,7 +43,7 @@ async function fetchContacs() {
 	);
 	const result = await response.json();
 
-	// console.log(result);
+	console.log(result);
 	if (response.status === 200) {
 		contacts.value = result.data;
 		page.value = result.paging.page;
