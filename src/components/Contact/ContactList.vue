@@ -1,32 +1,61 @@
 <script setup>
 import { useLocalStorage } from "@vueuse/core";
-import { onBeforeMount, onMounted, reactive, ref } from "vue";
-import { RouterLink } from "vue-router";
+import { computed, onBeforeMount, onMounted, reactive, ref, watch } from "vue";
+import { RouterLink, useRouter } from "vue-router";
 import { contactList } from "../../lib/api/ContactApi";
 import { alertError } from "../../lib/alert";
 import Card from "../ui/Card.vue";
 import Label from "../ui/Label.vue";
 import Input from "../ui/Input.vue";
 
+const router = useRouter();
 const token = useLocalStorage("token");
 const search = reactive({
 	name: "",
 	email: "",
 	phone: "",
 });
-const page = 1;
 
+const page = ref(1);
+const totalPage = ref(1);
 const contacts = ref([]);
 
+const pages = computed(() => {
+	let data = [];
+	for (let i = 1; i <= totalPage.value; i++) {
+		data.push(i);
+	}
+	return data;
+});
+
+async function handlePageChange(value) {
+	page.value = value;
+	await fetchContacs();
+}
+
 async function fetchContacs() {
-	const response = await contactList({ ...search, page }, token.value);
+	const response = await contactList(
+		{
+			...search,
+			page: search.email || search.name || search.phone ? 1 : page.value,
+		},
+		token.value,
+	);
 	const result = await response.json();
 
-	console.log(result);
+	// console.log(result);
 	if (response.status === 200) {
 		contacts.value = result.data;
+		page.value = result.paging.page;
+		totalPage.value = result.paging.total_page;
 	} else {
-		await alertError(response.errors);
+		await alertError(result.errors, async () => {
+			if (response.status === 403) {
+				await router.push({
+					path: "/login",
+				});
+			}
+		});
 	}
 }
 
@@ -214,7 +243,7 @@ onMounted(() => {
 						<p class="flex items-center">
 							<i class="fas fa-envelope text-gray-500 w-6"></i>
 							<span class="font-medium w-24">Email:</span>
-							<span>{{ contact.email }}</span>
+							<span class="truncate">{{ contact.email }}</span>
 						</p>
 						<p class="flex items-center">
 							<i class="fas fa-phone text-gray-500 w-6"></i>
@@ -243,33 +272,35 @@ onMounted(() => {
 	<!-- Pagination -->
 	<div class="mt-10 flex justify-center">
 		<nav
+			v-if="totalPage > 0"
 			class="flex items-center space-x-3 bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 p-3 animate-fade-in"
 		>
 			<a
+				v-if="page > 1"
+				v-on:click="() => handlePageChange(page - 1)"
 				href="#"
 				class="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 flex items-center"
 			>
 				<i class="fas fa-chevron-left mr-2"></i> Previous
 			</a>
 			<a
+				v-for="value in pages"
+				:key="value"
 				href="#"
-				class="px-4 py-2 bg-gradient text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-md"
+				v-on:click="() => handlePageChange(value)"
+				:class="[
+					'px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-md',
+					value === page
+						? 'bg-gradient text-white rounded-lg hover:opacity-90'
+						: 'bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 ',
+				]"
 			>
-				1
+				{{ value }}
 			</a>
+
 			<a
-				href="#"
-				class="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200"
-			>
-				2
-			</a>
-			<a
-				href="#"
-				class="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200"
-			>
-				3
-			</a>
-			<a
+				v-if="page < totalPage"
+				v-on:click="() => handlePageChange(page + 1)"
 				href="#"
 				class="px-4 py-2 bg-gray-700 text-gray-300 rounded-lg hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 flex items-center"
 			>

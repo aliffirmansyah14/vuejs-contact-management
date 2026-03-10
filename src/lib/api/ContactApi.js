@@ -24,7 +24,6 @@ export const contactList = async ({ name, email, phone, page }, token) => {
 	if (email) url.searchParams.append("email", email);
 	if (phone) url.searchParams.append("phone", phone);
 	if (page) url.searchParams.append("page", page);
-	console.log({ name, email, phone, page });
 	return await fetch(url, {
 		headers: {
 			Accept: "application/json",
