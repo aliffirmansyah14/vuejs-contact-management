@@ -25,8 +25,8 @@ export const alertConfirm = async message => {
 		showCancelButton: true,
 		cancelButtonText: "No",
 		confirmButtonText: "Yes",
-		confirmButtonColor: "#d33",
-		cancelButtonColor: "#3085d6",
+		cancelButtonColor: "#d33",
+		confirmButtonColor: "#3085d6",
 	});
 	return result.isConfirmed;
 };
