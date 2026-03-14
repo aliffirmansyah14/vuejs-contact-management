@@ -16,3 +16,17 @@ export const alertError = async (message, onClose = () => {}) => {
 		didClose: onClose,
 	});
 };
+
+export const alertConfirm = async message => {
+	const result = await Swal.fire({
+		icon: "question",
+		title: "Confirm",
+		text: message,
+		showCloseButton: true,
+		cancelButtonText: "No",
+		confirmButtonText: "Yes",
+		confirmButtonColor: "#d33",
+		cancelButtonColor: "#3085d6",
+	});
+	return result.isConfirmed;
+};
