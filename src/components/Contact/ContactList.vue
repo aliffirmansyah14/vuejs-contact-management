@@ -2,8 +2,8 @@
 import { useLocalStorage } from "@vueuse/core";
 import { computed, onBeforeMount, onMounted, reactive, ref, watch } from "vue";
 import { RouterLink, useRouter } from "vue-router";
-import { contactList } from "../../lib/api/ContactApi";
-import { alertError } from "../../lib/alert";
+import { contactDelete, contactList } from "../../lib/api/ContactApi";
+import { alertConfirm, alertError, alertSuccess } from "../../lib/alert";
 import Card from "../ui/Card.vue";
 import Label from "../ui/Label.vue";
 import Input from "../ui/Input.vue";
@@ -67,6 +67,24 @@ async function fetchContacs() {
 				});
 			}
 		});
+	}
+}
+
+async function handleDelete(contactId) {
+	const isConfirmed = await alertConfirm("Anda sudah yakin?");
+	if (!isConfirmed) return;
+
+	const response = await contactDelete(contactId, token.value);
+	const result = await response.json();
+
+	if (response.status === 200) {
+		await alertSuccess("Berhasil menghapus contact");
+		if (contacts.value.length <= 1) {
+			page.value = 1;
+		}
+		await fetchContacs();
+	} else {
+		await alertError(result.errors);
 	}
 }
 
@@ -271,6 +289,7 @@ onMounted(() => {
 						<i class="fas fa-edit mr-2"></i> Edit
 					</RouterLink>
 					<button
+						v-on:click="() => handleDelete(contact.id)"
 						class="px-4 py-2 bg-linear-to-r from-red-600 to-red-500 text-white rounded-lg hover:opacity-90 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 focus:ring-offset-gray-800 transition-all duration-200 font-medium shadow-md flex items-center"
 					>
 						<i class="fas fa-trash-alt mr-2"></i> Delete
