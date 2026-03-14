@@ -20,6 +20,17 @@ const page = ref(1);
 const totalPage = ref(1);
 const contacts = ref([]);
 
+// solusi pagination dengan watch reactive totapage
+// const pages = ref([]);
+
+// watch(totalPage,(value)=>{
+//    let data =[];
+// 	for(let i=1; i<=value; i++){
+// 		data.push(i);
+// 	}
+// 	pages.value = data;
+// })
+
 const pages = computed(() => {
 	let data = [];
 	for (let i = 1; i <= totalPage.value; i++) {
