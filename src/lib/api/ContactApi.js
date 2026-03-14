@@ -41,3 +41,34 @@ export const contactDelete = async (id, token) => {
 		method: "DELETE",
 	});
 };
+
+export const contactDetail = async (id, token) => {
+	return await fetch(`${import.meta.env.VITE_API_PATH}/contacts/${id}`, {
+		headers: {
+			Accept: "application/json",
+			Authorization: token,
+		},
+		method: "GET",
+	});
+};
+
+export const contactUpdate = async (
+	{ first_name, last_name, email, phone },
+	id,
+	token,
+) => {
+	return await fetch(`${import.meta.env.VITE_API_PATH}/contacts/${id}`, {
+		headers: {
+			"Content-Type": "application/json",
+			Accept: "application/json",
+			Authorization: token,
+		},
+		method: "PUT",
+		body: JSON.stringify({
+			first_name,
+			email,
+			last_name,
+			phone,
+		}),
+	});
+};
