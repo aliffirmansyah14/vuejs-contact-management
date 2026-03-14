@@ -22,7 +22,7 @@ export const alertConfirm = async message => {
 		icon: "question",
 		title: "Confirm",
 		text: message,
-		showCloseButton: true,
+		showCancelButton: true,
 		cancelButtonText: "No",
 		confirmButtonText: "Yes",
 		confirmButtonColor: "#d33",
