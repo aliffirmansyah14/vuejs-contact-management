@@ -26,7 +26,6 @@ async function fetchContact() {
 
 	console.log(result);
 	if (response.status === 200) {
-		contact.name = result.data.name;
 		contact.email = result.data.email;
 		contact.first_name = result.data.first_name;
 		contact.last_name = result.data.last_name;
