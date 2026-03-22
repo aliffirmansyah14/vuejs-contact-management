@@ -51,7 +51,7 @@ async function handleSubmit() {
 	}
 }
 
-onMounted(fetchContact);
+onMounted(async () => await fetchContact());
 </script>
 
 <template>
