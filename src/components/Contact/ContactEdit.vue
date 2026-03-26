@@ -2,11 +2,11 @@
 import { useLocalStorage } from "@vueuse/core";
 import Input from "../ui/Input.vue";
 import Label from "../ui/Label.vue";
-import ContactHeader from "./ContactHeader.vue";
 import { useRoute, useRouter } from "vue-router";
 import { onMounted, reactive } from "vue";
 import { contactDetail, contactUpdate } from "../../lib/api/ContactApi";
 import { alertSuccess } from "../../lib/alert";
+import Header from "../ui/Header.vue";
 
 const route = useRoute();
 const router = useRouter();
@@ -54,9 +54,9 @@ onMounted(async () => await fetchContact());
 </script>
 
 <template>
-	<ContactHeader path-to-back="/dashboard/contacts">
+	<Header path-to-back="/dashboard/contacts">
 		<i class="fas fa-user-edit text-blue-400 mr-3"></i> Edit Contact
-	</ContactHeader>
+	</Header>
 
 	<div
 		class="bg-gray-800 bg-opacity-80 rounded-xl shadow-custom border border-gray-700 overflow-hidden max-w-2xl mx-auto animate-fade-in"

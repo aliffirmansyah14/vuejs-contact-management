@@ -3,7 +3,7 @@ import { useLocalStorage } from "@vueuse/core";
 import { computed, onMounted, reactive } from "vue";
 import { useRoute } from "vue-router";
 import { contactDetail } from "../../lib/api/ContactApi";
-import ContactHeader from "./ContactHeader.vue";
+import Header from "../ui/Header.vue";
 
 const route = useRoute();
 const { id } = route.params;
@@ -41,11 +41,10 @@ onMounted(async () => await fetchContact());
 </script>
 
 <template>
-	<ContactHeader>
+	<Header>
 		<i class="fas fa-address-book text-white text-2xl mr-3"></i>
-		<div class="text-white font-bold text-xl">
-			Contact Management
-		</div></ContactHeader
+		<div class="text-white font-bold text-xl">Contact Management</div></Header
+	>
 	>
 	<div
 		class="bg-gray-800/80 rounded-xl shadow-custom border border-gray-700 overflow-hidden max-w-2xl mx-auto animate-fade-in"
