@@ -49,7 +49,7 @@ const routes = [
 				component: ContactDetail,
 			},
 			{
-				path: "addresses/create",
+				path: "contacts/:id/addresses/create",
 				component: AddressCreate,
 			},
 			{
