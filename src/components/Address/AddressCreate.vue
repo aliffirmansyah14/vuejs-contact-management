@@ -1,12 +1,15 @@
 <script setup>
-import { useRoute } from "vue-router";
+import { useRoute, useRouter } from "vue-router";
 import Header from "../ui/Header.vue";
 import { useLocalStorage } from "@vueuse/core";
 import { computed, onMounted, reactive } from "vue";
 import { contactDetail } from "../../lib/api/ContactApi";
 import Input from "../ui/Input.vue";
 import Label from "../ui/Label.vue";
+import { addressCreate } from "../../lib/api/AddressApi";
+import { alertError, alertSuccess } from "../../lib/alert";
 
+const router = useRouter();
 const route = useRoute();
 const { id } = route.params;
 const token = useLocalStorage("token");
@@ -43,7 +46,18 @@ async function fetchContact() {
 }
 
 async function handleSubmit() {
-	console.log(address);
+	const response = await addressCreate(token.value, id, address);
+	const result = await response.json();
+
+	console.log(result);
+	if (response.status === 200) {
+		await alertSuccess("Successfully create address");
+		await router.push({
+			path: `/dashboard/contacts/${id}/detail`,
+		});
+	} else {
+		await alertError(result.errors);
+	}
 }
 
 onMounted(async () => await fetchContact());
