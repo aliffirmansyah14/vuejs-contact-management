@@ -35,3 +35,54 @@ export const addressesList = async (token, id) => {
 		},
 	);
 };
+
+export const addresDetail = async (token, id, addressId) => {
+	return await fetch(
+		`${import.meta.env.VITE_API_PATH}/contacts/${id}/addresses/${addressId}`,
+		{
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: token,
+			},
+			method: "GET",
+		},
+	);
+};
+
+export const addressUpdate = async (
+	token,
+	id,
+	{ addressId, street, city, province, country, postal_code },
+) => {
+	return await fetch(
+		`${import.meta.env.VITE_API_PATH}/contacts/${id}/addresses/${addressId}`,
+		{
+			headers: {
+				"Content-Type": "application/json",
+				Accept: "application/json",
+				Authorization: token,
+			},
+			method: "PUT",
+			body: JSON.stringify({
+				street,
+				city,
+				province,
+				country,
+				postal_code,
+			}),
+		},
+	);
+};
+
+export const addresDelete = async (token, id, addressId) => {
+	return await fetch(
+		`${import.meta.env.VITE_API_PATH}/contacts/${id}/addresses/${addressId}`,
+		{
+			headers: {
+				"Content-Type": "application/json",
+				Authorization: token,
+			},
+			method: "DELETE",
+		},
+	);
+};

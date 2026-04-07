@@ -1,5 +1,5 @@
 <script setup>
-import { reactive } from "vue";
+import { onBeforeMount, reactive } from "vue";
 import { RouterLink, useRouter } from "vue-router";
 import { userLogin } from "../../lib/api/UserApi";
 import { alertError } from "../../lib/alert";
@@ -15,6 +15,19 @@ const user = reactive({
 	password: "",
 });
 
+async function fetchUser() {
+	try {
+		const response = await userDetail(token.value);
+		const result = await response.json();
+		if (response.status === 200) {
+			await router.push({
+				path: "/dashboard/contacs",
+			});
+		}
+	} catch (error) {
+		console.log("error di user login : " + error);
+	}
+}
 async function handleSubmit() {
 	const response = await userLogin(user);
 	const result = await response.json();
@@ -28,6 +41,8 @@ async function handleSubmit() {
 		await alertError(result.errors);
 	}
 }
+
+onBeforeMount(async () => fetchUser());
 </script>
 <template>
 	<div

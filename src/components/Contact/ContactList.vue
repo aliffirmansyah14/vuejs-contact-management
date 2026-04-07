@@ -7,6 +7,7 @@ import { alertConfirm, alertError, alertSuccess } from "../../lib/alert";
 import Card from "../ui/Card.vue";
 import Label from "../ui/Label.vue";
 import Input from "../ui/Input.vue";
+import { userDetail } from "../../lib/api/UserApi";
 
 const router = useRouter();
 const token = useLocalStorage("token");
@@ -19,6 +20,25 @@ const search = reactive({
 const page = ref(1);
 const totalPage = ref(1);
 const contacts = ref([]);
+
+async function fetchUser() {
+	try {
+		// await new Promise(resolve => setTimeout(resolve, 1000));
+		const response = await userDetail(token.value);
+		const result = await response.json();
+		if (response.status === 200) {
+			return;
+		} else {
+			await alertError(result.errors, async () => {
+				await router.push({
+					path: "/login",
+				});
+			});
+		}
+	} catch (error) {
+		console.log(error);
+	}
+}
 
 // solusi pagination dengan watch reactive totapage
 // const pages = ref([]);
@@ -88,7 +108,10 @@ async function handleDelete(contactId) {
 	}
 }
 
-onBeforeMount(fetchContacs);
+onBeforeMount(async () => {
+	await fetchUser();
+	await fetchContacs();
+});
 
 onMounted(() => {
 	const toggleButton = document.getElementById("toggleSearchForm");

@@ -4,8 +4,9 @@ import { computed, onMounted, reactive, ref } from "vue";
 import { RouterLink, useRoute } from "vue-router";
 import { contactDetail } from "../../lib/api/ContactApi";
 import Header from "../ui/Header.vue";
-import { addressesList } from "../../lib/api/AddressApi";
+import { addresDelete, addressesList } from "../../lib/api/AddressApi";
 import AddressCard from "./AddressCard.vue";
+import { alertConfirm, alertError, alertSuccess } from "../../lib/alert";
 
 const route = useRoute();
 const { id } = route.params;
@@ -40,7 +41,7 @@ async function fetchContact() {
 		await alertError(result.errors);
 	}
 }
-async function fetchAddress() {
+async function fetchAddresses() {
 	const response = await addressesList(token.value, id);
 	const result = await response.json();
 
@@ -54,8 +55,23 @@ async function fetchAddress() {
 
 onMounted(async () => {
 	await fetchContact();
-	await fetchAddress();
+	await fetchAddresses();
 });
+
+async function handleDeleteAddress(addressId) {
+	if (!(await alertConfirm("Sudah yakin ingin menghapus address ini?"))) {
+		return;
+	}
+	const response = await addresDelete(token.value, id, addressId);
+	const result = await response.json();
+
+	if (response.status === 200) {
+		await alertSuccess("Sucessfuly menghapus data");
+		await fetchAddresses();
+	} else {
+		await alertError(result.errors);
+	}
+}
 </script>
 
 <template>
@@ -157,10 +173,14 @@ onMounted(async () => {
 						v-if="addresses.length > 0"
 						v-for="address in addresses"
 						:key="address.id"
+						:contact-id="id"
+						:address-id="address.id"
 						:city="address.city"
 						:country="address.country"
 						:postal_code="address.postal_code"
 						:province="address.province"
+						:street="address.street"
+						:handle-delete="() => handleDeleteAddress(address.id)"
 					/>
 				</div>
 			</div>
